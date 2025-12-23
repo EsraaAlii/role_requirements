@@ -38,24 +38,23 @@ class JobPrediction:
         """"Load objects from the MLflow run"""
         mlflow.set_tracking_uri(self.tracking_uri)
         client = MlflowClient()
-
-        run = mlflow.get_run(self.run_id)
+        
+        #run = mlflow.get_run(self.run_id)
 
         #load model
         model_path = os.path.join(
-            self.tracking_uri, 
+            self.tracking_uri,
             self.exp_id, 
             self.run_id, 
             "artifacts", 
             LOG_MODEL_PKL
         )
-
         with open(model_path, "rb") as f:
             model_pkl = pickle.load(f)
 
         #load data
         data_path = os.path.join(
-            self.tracking_uri, 
+            self.tracking_uri,
             self.exp_id, 
             self.run_id, 
             "artifacts", 
@@ -63,9 +62,11 @@ class JobPrediction:
         )
         with open(data_path, "rb") as f:
             data_pkl = pickle.load(f)
-
+        print(data_pkl.keys())
         #return model and data labels
-        return model_pkl['model_object'],data_pkl["features_names"],data_pkl["targets_names"]
+        return model_pkl['model_object'],\
+            data_pkl["features_names"],\
+                data_pkl["targets_names"]
     
     def load_clusters_config(self, path_cluster_config):
         """Load skills clusters developed in 03_feature_engineering.ipynb"""
